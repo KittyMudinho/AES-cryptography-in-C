@@ -11,7 +11,7 @@
         <h3>SubBytes: step we identify the matching hexadecimal numbers from the original array to S-Box;</h3>
         <h3>ShiftRows: step we move the line of the array according to its position, for example, line 0 we make 0 move, line 1 one move...</h3>
         <h3>MixCollumns: XOR operation between the result ShiftRows array and a defined array;</h3>
-        <h3>MixCollumns: XOR operation between the result MixCollumns array and a defined array.</h3>
+        <h3>AddRoundKey: XOR operation between the result MixCollumns array and a defined array.</h3>
     </p>
       <p>
       <h1>AES Encryption Procces</h1>
@@ -26,6 +26,8 @@
           <h3>}</h3>
           <h3>Searching on google you can find a way to take the value of that printf into a variable, it's your decision.</h3>
           <h3>The code just take the hexadecimal value and "points" to its place on S-Box, for example: a00=5F is on line 5 column F in S-Box and it's 8c, then a00 in SubBytes Array is 8c</h3>
+          <h1>ShiftRows</h1> 
+          <h3>step we move the line of the array according to its position, for example, line 0 we make 0 move, line 1 one move...</h3>
           <h1>MixCollumns</h1>
           <h3>It's quite hard/boring to do on paper, but let's try to understand...</h3>
           <h3>It's a matricial multiplication between a defined array and each collum of the ShiftRows array, but we don't add the vallues, instead, we make a XOR operation, like the photo below:</h3>
@@ -73,6 +75,8 @@
           <h3>}</h3>
           <h3>Pesquisando no google você consegue achar uma maneira de pegar o valor do printf dentro de uma variável, a decisão é sua.</h3>
           <h3>O código pega o valor hexadecimal e "aponta" para sua poisção na S-Box, por exemplo: a00=5F está na linha 5 coluna F na S-Box e isso é 8c, portanto, a00 na matriz do SubBytes é 8c</h3>
+          <h1>ShiftRows</h1> 
+          <h3>etapa que movemos uma linha da matriz de acordo com sua posição, por exemplo, linha 0 fazemos 0 movimentos, linha 1 um movimento...</h3>
           <h1>MixCollumns</h1>
           <h3>É meio difícil/chato de fazer no papel, mas vamos tentar entender...</h3>
           <h3>É um produto matricial entre uma matriz definida/fixa com cada coluna da matriz do ShiftRows, mas nós não somamos os valores, fazemos uma operação XOR, como está na foto abaixo:</h3>
