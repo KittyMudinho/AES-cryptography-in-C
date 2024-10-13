@@ -12,6 +12,10 @@
 *.txt
 *.filters
 *.vcxproj
+*.sln
+/AESProprio/AESProprio.vcxproj
+/AESProprio/AESProprio.vcxproj
+/AESProprio/AESProprio.vcxproj.filters
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
