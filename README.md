@@ -30,8 +30,21 @@
           <h3>step we move the line of the array according to its position, for example, line 0 we make 0 move, line 1 one move...</h3>
           <h1>MixCollumns</h1>
           <h3>It's quite hard/boring to do on paper, but let's try to understand...</h3>
-          <h3>It's a matricial multiplication between a defined array and each collum of the ShiftRows array, but we don't add the vallues, instead, we make a XOR operation, like the photo below:</h3>
-          ![image](https://github.com/user-attachments/assets/88e565c3-5a7a-4c50-9a9d-4a5bdbcf3cb4)
+          <h3>It's a matricial multiplication between a defined array and each collum of the ShiftRows array, but we don't add the vallues, instead, we make a XOR operation, and we don't mutiple, instead, we make rijndael's field operation, let's do it step by step:</h3>
+          <h3>Let's take 7F, it's 1111011 in binary, now, we gotta transform it into a polynomial.</h3>
+          <h3>1111011</h3>
+          <h3>1x^6+1x^5+1x^4+1x^3+0x^2+1x^1+1x^0</h3>
+          <h3>x^6+x^5+x^4+x^3+x+1</h3>
+          <h3>The "formula" is: ajX^(j-1), j=position, aj=elemente in the position j, j starts as 0.</h3>
+          <h3>Nice... now we have to make the MixCollumns operation:</h3>
+          <h3>Let's take (1)(3F7E)</h3>
+          <h3>(1)(0011111101111110)</h3>
+          <h3>(1)(x^13+x^12+x^11+x^10+x^9+x^8+x^6+x^5+x^4+x^3+x^2+x)</h3>
+          <h3>(x^13+x^12+x^11+x^10+x^9+x^8+x^6+x^5+x^4+x^3+x^2+x)</h3>
+          <h3>11111101111110</h3>
+          <h3>The last step is a modular operation, using (x^8+x^4+x^3+x+1), it's a "standard" polynomial:</h3>
+          <h3>11111101111110mod100011011:</h3>
+          ![image](https://github.com/user-attachments/assets/a59d1d10-fb35-4786-b3e7-56797bc04a9b)
           <h1>AddRoundKey</h1>
           <h3>Similar to MixCollumns, but there's a key we make XOR operation with each element of MixCollumns array</h3>
           <h2>You can do all procces as much as you want to</h2>
