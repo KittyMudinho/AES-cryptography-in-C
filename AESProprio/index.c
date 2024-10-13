@@ -97,7 +97,7 @@ void mixColumn(unsigned char* column)
 {
     unsigned char cpy[4];
     int i;
-    for (i = 0; i < 4; i++)
+    for (i = 0; i < 3; i++)
     {
         cpy[i] = column[i];
     }
@@ -257,6 +257,6 @@ int main() {
     printf("\nTexto descriptografado:\n");
     printarTexto(invValorDoSub);
     printf("\nTexto descriptografado(hexa):\n");
-    printarHexa(invValorDoSub);
+    printarHexa(chave);
 	return 0;
 }
