@@ -50,7 +50,7 @@ unsigned char rsbox[256] =
     unsigned char invValorDoShift[9];
     unsigned char invValorDoMix[9];
     unsigned char valorDoRound[9];
-    unsigned char key[9] = { 0x40, 0xfc, 0x9c, 0x1e ,0x6e, 0x12, 0x68, 0x60, 0x8c };
+    unsigned char chave[9];
     unsigned char roundKey[9] = { 0x45, 0xf3, 0x9f, 0xde ,0x6c, 0x33, 0x22, 0x17, 0x26 };
 void SubBytes() {
     for (int i = 0; i < 9; i++) {
@@ -76,17 +76,69 @@ void ShiftRows() {
         }
     }
 }
-void MixCollums() {
-    valorDoMix[0] = (mix[0] * valorDoShift[0]) ^ (mix[1] * valorDoShift[3]) ^ (mix[2] * valorDoShift[6]);
-    valorDoMix[1] = (mix[0] * valorDoShift[1]) ^ (mix[1] * valorDoShift[4]) ^ (mix[2] * valorDoShift[7]);
-    valorDoMix[2] = (mix[0] * valorDoShift[2]) ^ (mix[1] * valorDoShift[5]) ^ (mix[2] * valorDoShift[8]);
-    valorDoMix[3] = (mix[3] * valorDoShift[0]) ^ (mix[4] * valorDoShift[3]) ^ (mix[5] * valorDoShift[6]);
-    valorDoMix[4] = (mix[3] * valorDoShift[1]) ^ (mix[4] * valorDoShift[4]) ^ (mix[5] * valorDoShift[7]);
-    valorDoMix[5] = (mix[3] * valorDoShift[2]) ^ (mix[4] * valorDoShift[5]) ^ (mix[5] * valorDoShift[8]);
-    valorDoMix[6] = (mix[6] * valorDoShift[0]) ^ (mix[7] * valorDoShift[3]) ^ (mix[8] * valorDoShift[6]);
-    valorDoMix[7] = (mix[6] * valorDoShift[1]) ^ (mix[7] * valorDoShift[4]) ^ (mix[8] * valorDoShift[7]);
-    valorDoMix[8] = (mix[6] * valorDoShift[2]) ^ (mix[7] * valorDoShift[5]) ^ (mix[8] * valorDoShift[8]);
+unsigned char galois_multiplication(unsigned char a, unsigned char b)
+{
+    unsigned char p = 0;
+    unsigned char counter;
+    unsigned char hi_bit_set;
+    for (counter = 0; counter < 8; counter++)
+    {
+        if ((b & 1) == 1)
+            p ^= a;
+        hi_bit_set = (a & 0x80);
+        a <<= 1;
+        if (hi_bit_set == 0x80)
+            a ^= 0x1b;
+        b >>= 1;
+    }
+    return p;
 }
+void mixColumn(unsigned char* column)
+{
+    unsigned char cpy[4];
+    int i;
+    for (i = 0; i < 4; i++)
+    {
+        cpy[i] = column[i];
+    }
+    column[0] = galois_multiplication(cpy[0], 2) ^
+        galois_multiplication(cpy[3], 1) ^
+        galois_multiplication(cpy[2], 1) ^
+        galois_multiplication(cpy[1], 3);
+
+    column[1] = galois_multiplication(cpy[1], 2) ^
+        galois_multiplication(cpy[0], 1) ^
+        galois_multiplication(cpy[3], 1) ^
+        galois_multiplication(cpy[2], 3);
+
+    column[2] = galois_multiplication(cpy[2], 2) ^
+        galois_multiplication(cpy[1], 1) ^
+        galois_multiplication(cpy[0], 1) ^
+        galois_multiplication(cpy[3], 3);
+
+    column[3] = galois_multiplication(cpy[3], 2) ^
+        galois_multiplication(cpy[2], 1) ^
+        galois_multiplication(cpy[1], 1) ^
+        galois_multiplication(cpy[0], 3);
+}
+void mixColumns(unsigned char* state)
+{
+    int i, j;
+    unsigned char column[4];
+    for (i = 0; i < 3; i++)
+    {
+        for (j = 0; j < 3; j++)
+        {
+            column[j] = valorDoMix[(j * 4) + i];
+        }
+        mixColumn(column);
+        for (j = 0; j < 3; j++)
+        {
+            valorDoMix[(j * 4) + i] = column[j];
+        }
+    }
+}
+
 void addRoundKey() {
     for (int i = 0; i < 9; i++) {
         valorDoRound[i] = valorDoMix[i] ^ roundKey[i];
@@ -95,7 +147,7 @@ void addRoundKey() {
 void encriptacao() {
     SubBytes();
     ShiftRows();
-    MixCollums();
+    mixColumns(valorDoShift);
     addRoundKey();
 }
 void invAddRoundKey() {
@@ -103,9 +155,14 @@ void invAddRoundKey() {
         valorDoMix[i] = valorDoRound[i] ^ roundKey[i];
     }
 }
+void descobrirChave() {
+    for (int i = 0; i < 9; i++) {
+        chave[i] = valorDoMix[i] ^ valorDoShift[i];
+    }
+}
 void InvMixColumns() {
     for (int i = 0; i < 9; i++) {
-        invValorDoMix[i] = valorDoMix[i] ^ key[i];
+        invValorDoMix[i] = valorDoMix[i] ^ chave[i];
     }
 }
 void invShiftRows() {
@@ -133,6 +190,7 @@ void invSubBytes() {
     }
 }
 void desencriptar() {
+    descobrirChave();
     invAddRoundKey();
     InvMixColumns();
     invShiftRows();
