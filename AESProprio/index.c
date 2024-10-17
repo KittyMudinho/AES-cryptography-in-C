@@ -90,31 +90,16 @@ unsigned char galois_multiplication(unsigned char a, unsigned char b)
 }
 void mixColumn(unsigned char* column)
 {
-    unsigned char cpy[4];
-    int i;
-    for (i = 0; i < 3; i++)
-    {
-        cpy[i] = column[i];
-    }
-    column[0] = galois_multiplication(cpy[0], 2) ^
-        galois_multiplication(cpy[3], 1) ^
-        galois_multiplication(cpy[2], 1) ^
-        galois_multiplication(cpy[1], 3);
+    column[0] = galois_multiplication(column[0], 2) ^
+        galois_multiplication(column[3], 1) ^
+        galois_multiplication(column[2], 1);
 
-    column[1] = galois_multiplication(cpy[1], 2) ^
-        galois_multiplication(cpy[0], 1) ^
-        galois_multiplication(cpy[3], 1) ^
-        galois_multiplication(cpy[2], 3);
+    column[1] = galois_multiplication(column[1], 2) ^
+        galois_multiplication(column[0], 1);
 
-    column[2] = galois_multiplication(cpy[2], 2) ^
-        galois_multiplication(cpy[1], 1) ^
-        galois_multiplication(cpy[0], 1) ^
-        galois_multiplication(cpy[3], 3);
-
-    column[3] = galois_multiplication(cpy[3], 2) ^
-        galois_multiplication(cpy[2], 1) ^
-        galois_multiplication(cpy[1], 1) ^
-        galois_multiplication(cpy[0], 3);
+    column[2] = galois_multiplication(column[2], 2) ^
+        galois_multiplication(column[1], 1) ^
+        galois_multiplication(column[0], 1);
 }
 void mixColumns()
 {
@@ -133,7 +118,6 @@ void mixColumns()
         }
     }
 }
-
 void addRoundKey() {
     for (int i = 0; i < 9; i++) {
         valorDoRound[i] = valorDoMix[i] ^ roundKey[i];
@@ -252,6 +236,6 @@ int main() {
     printf("\nTexto descriptografado:\n");
     printarTexto(invValorDoSub);
     printf("\nTexto descriptografado(hexa):\n");
-    printarHexa(chave);
+    printarHexa(invValorDoSub);
 	return 0;
 }
