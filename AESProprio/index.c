@@ -116,7 +116,7 @@ void mixColumn(unsigned char* column)
         galois_multiplication(cpy[1], 1) ^
         galois_multiplication(cpy[0], 3);
 }
-void mixColumns(unsigned char* state)
+void mixColumns()
 {
     int i, j;
     unsigned char column[4];
@@ -142,7 +142,7 @@ void addRoundKey() {
 void encriptacao() {
     SubBytes();
     ShiftRows();
-    mixColumns(valorDoShift);
+    mixColumns();
     addRoundKey();
 }
 void invAddRoundKey() {
